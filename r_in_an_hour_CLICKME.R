@@ -303,3 +303,10 @@ sub_set %>%
           improvement_direction = "decrease")
 
 
+## lets do a quick count of entries for the next bit
+print(ae_attendances |>
+  count(org_code, 
+        sort = TRUE), 
+  n = 14)
+
+
