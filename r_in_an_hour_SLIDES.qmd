@@ -1,0 +1,113 @@
+---
+title: "R in an Hour"
+author: "Simon Wellesley-Miller"
+format: revealjs
+editor: visual
+---
+
+## Introductions
+
+Simon Wellesley-Miller  
+**Senior Analytical Manager**  
+*South West Intelligence and Insights Team*  
+*NHS England*  
+
+## Getting Started
+
+Use your browser to navigate to
+
+posit.cloud
+
+Click on **GET STARTED**
+
+Choose the Cloud **Free version**
+
+Click on **Sign up**
+
+You can either make a brand new account or use an existing google account.  
+
+Once you have signed in it should bring to a **Your Workspace** page
+
+
+## Your Workspace
+
+Up in the top Right hand side click on **New Project**
+
+Select the bottom option **New Project from Git Repository**
+
+In the URL of your Git Repository - type
+
+**https://github.com/Simon-W-M/rinanhour**
+
+## Set up
+
+Hightligh the code between the two lines of hashes
+
+Click run
+
+## What is R and R Studio
+
+R software is a programming language, it is a free and open-source environment specifically designed for statistical computing and data visualisation.  
+
+R Studio is a graphical user interface to the R software that comes with a host of features to make programming lovely.
+
+## Key features
+
+::: incremental
+
+-   Reproducibility: Converting analysis into code allows for reproduction of results, quality assurance and code sharing.
+
+-   Statistical Computing: R excels at statistical tasks like linear and nonlinear modeling, hypothesis testing, time series analysis, machine learning, text mining and much much more.  Also more mundane functions.
+
+-   Data Visualisation: R allows you to create clear and publication-quality graphs and visualizations to effectively present your data analysis.
+:::
+
+## Key features
+
+::: incremental
+
+-   Extensible: The core R language is enhanced by a vast collection of user-created packages containing reusable code, data, and documentation. These packages significantly extend R's functionality into various areas.  All using a common syntax.
+
+-   End to end workflows: R can ingest data from a variety of sources including SQL servers and data lakes, wrangle data, produce reports and with quarto produce production reports or with shiny create automated apps, tools and dashboards.
+
+:::
+
+## Key features
+
+::: incremental
+
+-   Versatility: can pull from data lakes, sql servers, read text from PDFs, can web scrape, read csvs, excel and most data formats and belnd them.
+
+-   Outputs:  Create outputs in HTML, word, powerpoint, PDF, revealJS and shiny (for server based interactive tools and dashboards)
+
+:::
+
+## What we are going to do today
+
+Have a very quick play on R studio
+
+Import some data, do some wrangling, create some charts and produce a report.
+
+## Quick show of hands
+
+::: incremental
+
+-   Who has used R before?
+
+-   Who has used python or other programming language? 
+
+-   Who has used sql?
+
+-   Who has used excel to a level of pivot tables and lookups?
+
+-   Who has basic excel knowledge?
+
+-   Who has nothing at all?
+
+:::
+
+## Let us go
+
+
+
+

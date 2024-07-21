@@ -1,0 +1,226 @@
+---
+title: "R in an Hour Report"
+format:
+  html:
+    toc: true
+    toc_float: true
+    number-sections: true
+    self-contained: true 
+editor: visual
+---
+
+```{r}
+#| echo: false
+#| warning: false
+
+######################
+# Welcome to Quarto! #
+######################
+
+# This is quarto, think of it as an extention to R
+# Where before when we produced charts and tables they appeared in a 
+# viewing pane.
+# Quarto allows us to create documents, reports and dashboards.
+# Personally I am fond a good quality report with text that outlines 
+# the analysis and uses graphs and tables to support any hypohesis
+
+# Quarto allows output into a variety of formats, but all the cool kids
+# use HTML.  It follows accessibility guidelines and can be read by 
+# screen readers, it allows for interactive elements and resizes depending
+# on the user, such as you could send the interative report we are
+# going to make to your phone and it would work there.
+
+# Word, powerpoint, pdf are also supported.
+
+######################################################
+
+# The basis of quarto is that it is broken down into chunks
+# We have code chunks where we write code
+# And text chuncks where we write text
+
+# CODE STARTS
+
+# lets load in our libraries again
+
+# Specify required packages
+my_packages <- c("tidyverse",
+                 "NHSRdatasets", 
+                 "NHSRplotthedots",
+                 "gt",
+                 "scales",
+                 "pacman") 
+
+# Extract not installed packages
+not_installed <- my_packages[!(my_packages %in% installed.packages()[ , "Package"])]  
+
+# Install not installed packages
+if(length(not_installed)) install.packages(not_installed)   
+
+# Load all packages
+pacman::p_load(char = my_packages) 
+
+# this time we already have the libraries installed, 
+# we just need to call them so it takes a fraction of the time
+
+# Load  -  monthly A&E data from NHSE datasets
+data("ae_attendances")
+
+# have a look at the AE attendances data
+# pick 3 org codes at random and add them into this vector
+
+report <- c('','','')
+
+# eg: 
+# report <- c('RF4','RLN','RQ6')
+# (remember R is case sensitive)
+
+# we are going to use the median summary we ran previously
+
+# lets create an object of that summary
+ae_summary <- ae_attendances |> 
+  filter(org_code == report) |>
+  summarise(median_average = median(attendances),
+            .by = c(org_code, type)) |> 
+  pivot_wider(id_cols = org_code, 
+              names_from = type, 
+              values_from = median_average,
+              names_sort = TRUE)
+
+# we will then make that into a table
+summary_table <- ae_summary |>
+  gt() |>
+  sub_missing(
+    columns = everything(),
+    rows = everything(),
+    missing_text = "-"
+  ) |>
+  fmt_auto() |>
+  tab_spanner(
+    label = "Attendance Type",
+    columns = c("1", "2", "other")
+  ) |>
+  tab_header(
+    title = paste0(
+      "Median Attendances by type for providers ",
+      paste0(report, collapse = " ")
+    ),
+    subtitle = paste0(
+      "Covers period: ", min(ae_attendances$period), " to ", max(ae_attendances$period)
+    )
+  ) |>
+  tab_footnote(
+    footnote = md("*Data taken from NHS-R datasets*")
+  ) |>
+  cols_label(
+    org_code = "Provider Code",
+    other = "Other"
+  )
+
+###
+
+# Now lets make a spc chart for each of your sites for each of the 
+# attendance types, but seeing as we will only be changing the type
+# we can turn this into a function
+
+spc_plt_function <- function(input_type) {
+ae_attendances |> 
+  filter(type == input_type, 
+         org_code == report,
+         period > as.Date("2018-04-01")) |>
+  ptd_spc(value_field = attendances, 
+          date_field = period, 
+          improvement_direction = "decrease",
+          facet_field = org_code) |>
+  ptd_create_ggplot(point_size = 2,
+                    x_axis_date_format = "%b-%y")
+  }
+
+
+```
+
+# Report on AE Attendances for sites `r paste0(report, collapse = " ")`
+
+Report on AE attendances
+
+This report shows the median number of attendances and a SPC graph to show variation and trends over time.
+
+## Table of median attendances by type
+
+```{r}
+#| echo: false
+
+# we are simply going to call our table object and so it will be placed here
+
+summary_table
+
+```
+
+## Attendance Trends
+
+These charts show trends within SPC charts.  
+
+::: {.panel-tabset group="attendances"}  
+### Type 1
+
+```{r}
+#| echo: false
+#| warning: false
+
+# likewise we are just going to call our plot function and 
+# it will put our chart here
+spc_plt_function('1')
+
+```
+
+
+### Type 2
+
+```{r}
+#| echo: false
+#| warning: false
+
+# likewise we are just going to call our plot function and 
+# it will put our chart here
+spc_plt_function('2')
+
+```
+
+### Type Other
+
+```{r}
+#| echo: false
+#| warning: false
+
+spc_plt_function('other')
+
+```
+::: 
+
+# Caveats and contact details
+
+Data is completely synthetic and taken from NHS-R training datasets.
+
+:::{.callout-note collapse=true appearance='default' icon=true}
+## Information (click to expand)
+
+> **Contact**\
+> [**Simon Wellesley-Miller**](mailto:Simon.Wellesley-Miller@nhs.net)\
+> *Senior Analytical Manager*\
+> *South West Intelligence and Insights Team*\
+> `r format(Sys.Date(), "%d %B %Y")`
+
+:::
+
+```{r}
+#| echo: false
+
+# now what would happen if we choose different 
+# org codes or even if we added another one or two?
+
+# see how you could add additional variables and add sections for 
+# admissions and breaches
+
+# would could even automate some summary headline text to highlight
+# outliers or areas of concern or success
+```
+
